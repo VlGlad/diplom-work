@@ -1,0 +1,18 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    {{ title }} | {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<h1>
+    Front page
+</h1>
+
+<div class="container" style="width: 500px;">
+    {{ form(form) }}
+</div>
+
+
+{% endblock %}
+
