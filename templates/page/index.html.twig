@@ -8,7 +8,6 @@
 <div class="container" style="text-align: center;">
     {% for image in images %}
         <div class="container">
-            {# <img src='{{ "/uploads/" ~ image.getFileUrl() }}' alt=""> #}
             <img src='{{ asset("uploads/" ~ image.getFileUrl()) }}' alt="">
         </div>
     {% endfor %}
