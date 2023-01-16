@@ -5,11 +5,22 @@
 {% endblock %}
 
 {% block body %}
-<div class="container" style="text-align: center;">
-    {% for image in images %}
-        <div class="container">
-            <img src='{{ asset("uploads/" ~ image.getFileUrl()) }}' alt="">
-        </div>
-    {% endfor %}
+
+Версионирование ассетов
+
+<div class="container-fluid">
+    <div class="container add_logout">
+        <a class="front_button" href="/app/add">Добавить фото</a>
+        <a role="button" class="btn btn-danger btn-lg" href="/logout">Выйти</a>
+    </div>
+
+    <div class="container" style="text-align: center; width: 500px;">
+        {% for image in images %}
+            <div class="container">
+                <img class="feed_img" src='{{ asset("uploads/" ~ image.getFileUrl()) }}' alt="">
+            </div>
+        {% endfor %}
+    </div>
 </div>
+
 {% endblock %}

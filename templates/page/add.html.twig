@@ -6,11 +6,16 @@
 
 {% block body %}
 <h1>
-    Front page
+    Add page
 </h1>
 
 <div class="container" style="width: 500px;">
-    {{ form(form) }}
+    {{ form_start(addForm) }}
+        {{ form_row(addForm.file_url, {
+            label: 'File'
+        }) }}
+        <button type="submit" class="btn btn-primary">Save</button>
+    {{ form_end(addForm) }}
 </div>
 
 
