@@ -32,3 +32,9 @@
     width: 100%;
     height: auto;
 }
+
+.avatar_nickname{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}

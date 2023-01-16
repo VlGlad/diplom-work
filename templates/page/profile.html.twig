@@ -1,0 +1,27 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+<div class="container avatar_nickname">
+    {% if profileAvatar %}
+        <img src='{{ asset("uploads/" ~ profileAvatar.getFileUrl()) }}' alt="Image">
+    {% else %}
+        <img src='' alt="Image">
+    {% endif %}
+
+    <h5>{{ profileUser.getNickname() }}</h5>
+</div>
+
+<div class="container" style="text-align: center; width: 500px;">
+    {% for image in profileImages %}
+        <div class="container">
+            <img class="feed_img" src='{{ asset("uploads/" ~ image.getFileUrl()) }}' alt="">
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
