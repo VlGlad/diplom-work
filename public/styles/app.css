@@ -1,30 +1,40 @@
-body {
-    background-color: #17242C;
-    color: #fff;
-    font-family: 'Roboto Condensed', sans-serif;
+.add_logout{
+    display: flex;
+    justify-content: space-between;
 }
 
-.song-list i {
-    margin-top: 7px;
+.front_button {
+    display: inline-block;
+    background: #8C959D; 
+    color: #fff; 
+    padding: 1rem 1.5rem; 
+    text-decoration: none; 
+    border-radius: 3px; 
+}
+.front_login_button {
+    display: inline-block; /* Строчно-блочный элемент */
+    background: #8C959D; /* Серый цвет фона */
+    color: #fff; /* Белый цвет текста */
+    padding: 1rem 1.5rem; /* Поля вокруг текста */
+    text-decoration: none; /* Убираем подчёркивание */
+    border-radius: 3px; /* Скругляем уголки */
+}
+.front_register_button {
+    display: inline-block; /* Строчно-блочный элемент */
+    background: #8C959D; /* Серый цвет фона */
+    color: #fff; /* Белый цвет текста */
+    padding: 1rem 1.5rem; /* Поля вокруг текста */
+    text-decoration: none; /* Убираем подчёркивание */
+    border-radius: 3px; /* Скругляем уголки */
 }
 
-.song-list a {
-    color: #fff;
+.feed_img {
+    width: 100%;
+    height: auto;
 }
 
-.song-details {
-    background-color: #222F36;
-    border-radius: 5px;
-    padding: 5px;
-}
-
-.genre-list li {
-    margin-right: 5px;
-}
-
-.mixed-vinyl-container {
-    background: rgb(23,36,44);
-    background: linear-gradient(180deg, rgba(23,36,44,1) 1%, rgba(34,47,54,1) 97%);
-    border-radius: 5px;
-
+.avatar_nickname{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
 }

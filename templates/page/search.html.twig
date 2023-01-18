@@ -1,0 +1,31 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    {{ title }} | {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<h1>
+    Search page
+</h1>
+
+<div class="container" style="width: 500px;">
+    {{ form_start(searchForm) }}
+        {{ form_row(searchForm.nickname, {
+            label: 'Enter user nickname'
+        }) }}
+        <button type="submit" class="btn btn-primary">Search</button>
+    {{ form_end(searchForm) }}
+</div>
+
+{% if not users is empty %}
+
+    {% for user in users %}
+        <p> i have found some: <a href="/app/{{ user.nickname }}">{{ user.nickname }}</a> </p>
+    {% endfor %}
+
+{% endif %}
+
+
+{% endblock %}
+

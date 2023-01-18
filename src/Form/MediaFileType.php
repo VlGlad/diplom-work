@@ -19,7 +19,7 @@ class MediaFileType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('type', TypeTextType::class)
+            /* ->add('type', TypeTextType::class) */
             ->add('file_url', FileType::class, [
                 'mapped' => false,
                 'required' => true,
@@ -33,9 +33,9 @@ class MediaFileType extends AbstractType
                     ])
                     ],
             ])
-            ->add('file_likes', IntegerType::class)
+            /* ->add('file_likes', IntegerType::class)
             ->add('file_owner', IntegerType::class)
-            ->add('save', SubmitType::class)
+            ->add('save', SubmitType::class) */
         ;
     }
 
