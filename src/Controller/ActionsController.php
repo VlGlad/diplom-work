@@ -3,13 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\MediaFile;
+use App\Entity\Subscription;
 use App\Entity\User;
 use App\Form\MediaFileType;
+use App\Form\SubscriptionType;
 use App\Form\UserSearchType;
 use App\Service\FileUploader;
 use Doctrine\Persistence\ManagerRegistry;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,7 +21,7 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 class ActionsController extends AbstractController
 {
     #[Route('/app/search', name: 'app_searchUser')]
-    public function searchUser(Request $request, ManagerRegistry $doctrine)
+    public function searchUser(Request $request, ManagerRegistry $doctrine): Response
     {
         $foundUsers = [];
         // $user = new User;
@@ -68,7 +71,7 @@ class ActionsController extends AbstractController
     }
 
     #[Route('/app/{profile}', name: 'app_userProfile')]
-    public function userPage(#[CurrentUser] ?User $user, Request $request, string $profile, ManagerRegistry $doctrine)
+    public function userPage(#[CurrentUser] ?User $user, Request $request, string $profile, ManagerRegistry $doctrine): Response
     {
         // Проверяем корректность запроса
         $profileUser = $doctrine->getRepository(User::class)->findBy(['nickname' => $profile]);
@@ -86,11 +89,64 @@ class ActionsController extends AbstractController
         $profileAvatar = ''; // Сделать аватарки!!!
         $profileImages = $doctrine->getRepository(MediaFile::class)->findBy(['file_owner' => $profileUser->getId()]);
 
+        $subbed = $doctrine->getRepository(Subscription::class)->count([
+            'user_id' => $user->getId(), 'target_id' => $profileUser->getId()
+        ]);
+
+        if ($subbed){
+            // Тут реализуем форму отписки
+            return $this->render('page/profile.html.twig', [
+                "profileUser" => $profileUser,
+                "profileAvatar" => $profileAvatar,
+                "profileImages" => $profileImages,
+                "currentUsersPage" => $curentUsersPage,
+                "form" => null,
+                "subbed" => true,
+            ]);
+        }
+
+        $subscription = new Subscription;
+
+        $subscribeForm = $this->createForm(SubscriptionType::class);
+        
+        $subscribeForm->handleRequest($request);
+        if ($subscribeForm->isSubmitted() && $subscribeForm->isValid()){
+            $subscription
+                ->setUserId($user->getId())
+                ->setTargetId($profileUser->getId());
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($subscription);
+            $entityManager->flush();
+            return $this->render('page/profile.html.twig', [
+                "profileUser" => $profileUser,
+                "profileAvatar" => $profileAvatar,
+                "profileImages" => $profileImages,
+                "currentUsersPage" => $curentUsersPage,
+                "form" => null,
+                "subbed" => true,
+            ]);
+        }
+
         return $this->render('page/profile.html.twig', [
             "profileUser" => $profileUser,
             "profileAvatar" => $profileAvatar,
             "profileImages" => $profileImages,
             "currentUsersPage" => $curentUsersPage,
+            "form" => $subscribeForm,
+            "subbed" => false,
         ]);
+    }
+
+    /* #[Route('/app/{profile}/subscribe', name: 'app_userSubscribe')]
+    public function subscribe(#[CurrentUser] ?User $user, Request $request, string $profile, ManagerRegistry $doctrine): Response
+    {
+        
+        
+        return $this->render("page/test.html.twig");
+    } */
+
+    private function subscribe()
+    {
+        return 'amogus';
     }
 }
