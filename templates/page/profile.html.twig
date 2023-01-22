@@ -16,11 +16,12 @@
     <h5>{{ profileUser.getNickname() }}</h5>
 
     {# <a href="/app/{{ profileUser.getNickname() }}/subscribe" role="button" class="btn btn-primary">Подписаться</a> #}
-    {% if not subbed %}
+    {# {% if not subbed %}
         {{ form(form) }}
     {% else %}
         Отпискадизлайк
-    {% endif %}
+    {% endif %} #}
+    {{ form(form) }}
 
     
 </div>

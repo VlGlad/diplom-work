@@ -7,6 +7,7 @@ use App\Entity\Subscription;
 use App\Entity\User;
 use App\Form\MediaFileType;
 use App\Form\SubscriptionType;
+use App\Form\UnsubscriptionType;
 use App\Form\UserSearchType;
 use App\Service\FileUploader;
 use Doctrine\Persistence\ManagerRegistry;
@@ -40,7 +41,7 @@ class ActionsController extends AbstractController
     }
 
     #[Route('/app/add', name: 'app_addpage')]
-    public function index(#[CurrentUser] ?User $user, Request $request,
+    public function addPage(#[CurrentUser] ?User $user, Request $request,
         FileUploader $fileUploader, ManagerRegistry $doctrine): Response
     {
         $media = new MediaFile();
@@ -93,21 +94,45 @@ class ActionsController extends AbstractController
             'user_id' => $user->getId(), 'target_id' => $profileUser->getId()
         ]);
 
+        $subscribeForm = $this->createForm(SubscriptionType::class);
+        $unsubscribeForm = $this->createForm(UnsubscriptionType::class);
+
+        // Механизм отписки
         if ($subbed){
-            // Тут реализуем форму отписки
+
+            $unsubscribeForm->handleRequest($request);
+            if ($unsubscribeForm->isSubmitted() && $unsubscribeForm->isValid()){
+                $entityManager = $doctrine->getManager();
+                $subscription = $entityManager->getRepository(Subscription::class)
+                    ->findBy(
+                        ['user_id' => $user->getId(),
+                        'target_id' => $profileUser->getId()
+                    ]);
+                foreach ($subscription as $sub){
+                    $entityManager->remove($sub);
+                }
+                $entityManager->flush();
+                return $this->render('page/profile.html.twig', [
+                    "profileUser" => $profileUser,
+                    "profileAvatar" => $profileAvatar,
+                    "profileImages" => $profileImages,
+                    "currentUsersPage" => $curentUsersPage,
+                    "form" => $subscribeForm,
+                    "subbed" => false,
+                ]);
+            }
             return $this->render('page/profile.html.twig', [
                 "profileUser" => $profileUser,
                 "profileAvatar" => $profileAvatar,
                 "profileImages" => $profileImages,
                 "currentUsersPage" => $curentUsersPage,
-                "form" => null,
+                "form" => $unsubscribeForm,
                 "subbed" => true,
             ]);
         }
 
+        // Механизм подписки
         $subscription = new Subscription;
-
-        $subscribeForm = $this->createForm(SubscriptionType::class);
         
         $subscribeForm->handleRequest($request);
         if ($subscribeForm->isSubmitted() && $subscribeForm->isValid()){
@@ -122,7 +147,7 @@ class ActionsController extends AbstractController
                 "profileAvatar" => $profileAvatar,
                 "profileImages" => $profileImages,
                 "currentUsersPage" => $curentUsersPage,
-                "form" => null,
+                "form" => $unsubscribeForm,
                 "subbed" => true,
             ]);
         }
