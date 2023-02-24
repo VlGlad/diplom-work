@@ -30,8 +30,7 @@ class ActionsController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()){
             $searchedName = $form->get('nickname')->getData();
-            $foundUsers = $doctrine->getRepository(User::class)->findBy(['nickname' => $searchedName]);
-
+            $foundUsers = $doctrine->getRepository(User::class)->findLikeUser($searchedName[0]);
         }
         return $this->render('page/search.html.twig', [
             "title" => "hello",
@@ -71,7 +70,7 @@ class ActionsController extends AbstractController
         ]);
     }
 
-    #[Route('/app/{profile}', name: 'app_userProfile')]
+    #[Route('/app/user/{profile}', name: 'app_userProfile')]
     public function userPage(#[CurrentUser] ?User $user, Request $request, string $profile, ManagerRegistry $doctrine): Response
     {
         // Проверяем корректность запроса
@@ -160,18 +159,5 @@ class ActionsController extends AbstractController
             "form" => $subscribeForm,
             "subbed" => false,
         ]);
-    }
-
-    /* #[Route('/app/{profile}/subscribe', name: 'app_userSubscribe')]
-    public function subscribe(#[CurrentUser] ?User $user, Request $request, string $profile, ManagerRegistry $doctrine): Response
-    {
-        
-        
-        return $this->render("page/test.html.twig");
-    } */
-
-    private function subscribe()
-    {
-        return 'amogus';
     }
 }

@@ -4,9 +4,13 @@
     {{ parent() }}
 {% endblock %}
 
+{% block javascripts %}
+    <script src="{{ asset("js/reactions.js") }}"></script>
+{% endblock %}
+
 {% block body %}
 
-Версионирование ассетов
+{# для защиты от отправки реакций в неизвестные посты, можно генирировать хеши #}
 
 <div class="container-fluid">
     <div class="container add_logout">
@@ -20,8 +24,21 @@
     <div class="container" style="text-align: center; width: 500px;">
         {% for image in images %}
             <div class="container">
-                <img class="feed_img" src='{{ asset("uploads/" ~ image.getFileUrl()) }}' alt="">
+                <img class="feed_img" src="{{ asset('uploads/' ~ image.getFileUrl()) }}" alt="">
+                <div class="container reactions_container">
+                    <button role="button" reaction-target="{{ image.getId() }}" onclick="sendLike(this)" style="margin: 5px;">like {{ image.getFileLikes() }}</button>
+                    <div class="container comment_container">
+                        <textarea name="comment" reaction-target="{{ image.getId() }}" placeholder="Написать комментарий"></textarea>
+                        <button onclick="sendComment(this)">Send</button>
+                    </div>
+                    <div class="container">
+                        {% for comment in image.getFileComments() %}
+                            <p>{{ comment.getTextContent() }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
+            
         {% endfor %}
     </div>
 </div>
