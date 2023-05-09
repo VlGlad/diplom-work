@@ -1,41 +1,51 @@
-.add_logout{
-    display: flex;
-    justify-content: space-between;
+body {
+    background-color: #74EBD5;
+    background-image: linear-gradient(90deg, #74EBD5 0%, #9FACE6 100%);
+
+    background-color: #fcf7f7;
+
+    min-height: 100vh;
 }
 
-.front_button {
-    display: inline-block;
-    background: #8C959D; 
-    color: #fff; 
-    padding: 1rem 1.5rem; 
-    text-decoration: none; 
-    border-radius: 3px; 
-}
-.front_login_button {
-    display: inline-block; /* Строчно-блочный элемент */
-    background: #8C959D; /* Серый цвет фона */
-    color: #fff; /* Белый цвет текста */
-    padding: 1rem 1.5rem; /* Поля вокруг текста */
-    text-decoration: none; /* Убираем подчёркивание */
-    border-radius: 3px; /* Скругляем уголки */
-}
-.front_register_button {
-    display: inline-block; /* Строчно-блочный элемент */
-    background: #8C959D; /* Серый цвет фона */
-    color: #fff; /* Белый цвет текста */
-    padding: 1rem 1.5rem; /* Поля вокруг текста */
-    text-decoration: none; /* Убираем подчёркивание */
-    border-radius: 3px; /* Скругляем уголки */
+::-webkit-scrollbar {
+    width: 5px;
 }
 
-.feed_img {
-    width: 100%;
-    height: auto;
+::-webkit-scrollbar-track {
+    width: 5px;
+    background: #f5f5f5;
 }
 
-.avatar_nickname{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    margin-bottom: 5px;
+::-webkit-scrollbar-thumb {
+    width: 1em;
+    background-color: #ddd;
+    outline: 1px solid slategrey;
+    border-radius: 1rem;
+}
+
+.text-small {
+    font-size: 0.9rem;
+}
+
+.messages-box,
+.chat-box {
+    height: 510px;
+    overflow-y: scroll;
+}
+
+.rounded-lg {
+    border-radius: 0.5rem;
+}
+
+input::placeholder {
+    font-size: 0.9rem;
+    color: #999;
+}
+
+
+.router-link-active {
+    z-index: 2!important;
+    color: #fff!important;
+    background-color: #007bff!important;
+    border-color: #007bff!important;
 }

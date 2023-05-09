@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\MediaFile;
+use App\Entity\Post;
 use App\Entity\Subscription;
 use App\Entity\User;
 use App\Form\MediaFileType;
+use App\Form\PostType;
 use App\Form\SubscriptionType;
 use App\Form\UnsubscriptionType;
 use App\Form\UserSearchType;
@@ -30,8 +32,7 @@ class ActionsController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()){
             $searchedName = $form->get('nickname')->getData();
-            $foundUsers = $doctrine->getRepository(User::class)->findBy(['nickname' => $searchedName]);
-
+            $foundUsers = $doctrine->getRepository(User::class)->findLikeUser($searchedName[0]);
         }
         return $this->render('page/search.html.twig', [
             "title" => "hello",
@@ -44,12 +45,20 @@ class ActionsController extends AbstractController
     public function addPage(#[CurrentUser] ?User $user, Request $request,
         FileUploader $fileUploader, ManagerRegistry $doctrine): Response
     {
-        $media = new MediaFile();
-        $form = $this->createForm(MediaFileType::class, $media);
+        $post = new Post;
+        $media = new MediaFile;
+        $form = $this->createForm(PostType::class);
+
+        $prefilledRequestDataBag = $this->jsonToRequestDataBag($request->getContent());
+
+        $request->request->set($form->getName(), $prefilledRequestDataBag);
+        $form->handleRequest($request);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
-            $media = $form->getData();
+            $post = $form->getData();
+            $post->setOwnerId($user->getId());
             $mediaFile = $form->get('file_url')->getData();
             if ($mediaFile){
                 $mediaFileName = $fileUploader->upload($mediaFile);
@@ -59,19 +68,24 @@ class ActionsController extends AbstractController
                     ->setFileLikes(0)
                     ->setFileOwner($user->getId())
                 ;
+                $post->setMediaFile($media);
                 $entityManager = $doctrine->getManager();
                 $entityManager->persist($media);
+                $entityManager->persist($post);
                 $entityManager->flush();
-                return $this->redirectToRoute('app_homepage');
+                return $this->json(['Success!']);
             }
+        } 
+        else {
+            return $this->json(['wtf']);
         }
-        return $this->render('page/add.html.twig', [
-            "title" => "hello",
-            'addForm' => $form,
-        ]);
+        // return $this->render('page/add.html.twig', [
+        //     "title" => "hello",
+        //     'addForm' => $form,
+        // ]);
     }
 
-    #[Route('/app/{profile}', name: 'app_userProfile')]
+    #[Route('/app/user/{profile}', name: 'app_userProfile')]
     public function userPage(#[CurrentUser] ?User $user, Request $request, string $profile, ManagerRegistry $doctrine): Response
     {
         // Проверяем корректность запроса
@@ -160,18 +174,5 @@ class ActionsController extends AbstractController
             "form" => $subscribeForm,
             "subbed" => false,
         ]);
-    }
-
-    /* #[Route('/app/{profile}/subscribe', name: 'app_userSubscribe')]
-    public function subscribe(#[CurrentUser] ?User $user, Request $request, string $profile, ManagerRegistry $doctrine): Response
-    {
-        
-        
-        return $this->render("page/test.html.twig");
-    } */
-
-    private function subscribe()
-    {
-        return 'amogus';
     }
 }

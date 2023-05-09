@@ -21,7 +21,7 @@
 {% if not users is empty %}
 
     {% for user in users %}
-        <p> i have found some: <a href="/app/{{ user.nickname }}">{{ user.nickname }}</a> </p>
+        <p> i have found some: <a href="{{ path('app_userProfile', {profile: user.nickname}) }}">{{ user.nickname }}</a> </p>
     {% endfor %}
 
 {% endif %}

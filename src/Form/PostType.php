@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\MediaFile;
+use App\Entity\Post;
 use Doctrine\DBAL\Types\SmallIntType;
 use Doctrine\DBAL\Types\TextType;
 use Symfony\Component\Form\AbstractType;
@@ -14,12 +14,12 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 
-class MediaFileType extends AbstractType
+class PostType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            /* ->add('type', TypeTextType::class) */
+            ->add('text_content', TypeTextType::class)
             ->add('file_url', FileType::class, [
                 'mapped' => false,
                 'required' => true,
@@ -33,16 +33,14 @@ class MediaFileType extends AbstractType
                     ])
                     ],
             ])
-            /* ->add('file_likes', IntegerType::class)
-            ->add('file_owner', IntegerType::class)
-            ->add('save', SubmitType::class) */
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => MediaFile::class,
+            'data_class' => Post::class,
+            "csrf_protection" =>false,
         ]);
     }
 }

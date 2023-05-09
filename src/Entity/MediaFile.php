@@ -23,10 +23,11 @@ class MediaFile
     private ?string $file_url = null;
 
     #[ORM\Column]
+    private ?int $file_owner = null;
+
     private ?int $file_likes = self::DEFAULT_LIKES;
 
-    #[ORM\Column]
-    private ?int $file_owner = null;
+    private ?array $file_comments = [];
 
     public function getId(): ?int
     {
@@ -79,5 +80,17 @@ class MediaFile
         $this->file_owner = $file_owner;
 
         return $this;
+    }
+
+    public function setFileComments(array $arr): self
+    {
+        $this->file_comments = $arr;
+
+        return $this;
+    }
+
+    public function getFileComments(): ?array
+    {
+        return $this->file_comments;
     }
 }
